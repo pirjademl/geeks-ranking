@@ -1,23 +1,70 @@
+import { Animated, Easing, Text } from "react-native";
 import { FC } from "react";
-import { TouchableOpacity, Text } from "react-native";
+import { useRef, useEffect } from "react";
+import { FontAwesome } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 interface ButtonProps {
     title: string;
-    clickHandler?: () => void;
-    containerStyles?: string;
-    textStyle?: string;
+    clickHandler: () => void;
+    containerStyles: string;
+    textStyle: string;
+    isLoading: boolean;
+    disabled: boolean;
 }
 const Button: FC<ButtonProps> = ({
     title,
     clickHandler,
     containerStyles,
     textStyle,
+    disabled,
+    isLoading,
 }) => {
+    const rotateValue = useRef(new Animated.Value(0)).current;
+
+    const startRotation = () => {
+        Animated.loop(
+            Animated.timing(rotateValue, {
+                toValue: 1,
+                duration: 1000,
+                easing: Easing.linear,
+                useNativeDriver: true,
+            }),
+        ).start();
+    };
+
+    // Start rotation when isLoading is true
+    useEffect(() => {
+        if (isLoading) {
+            startRotation();
+        } else {
+            rotateValue.stopAnimation();
+        }
+    }, [isLoading]);
+
+    // Interpolate the rotation value to rotate 360 degrees
+    const rotate = rotateValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["0deg", "360deg"],
+    });
+
     return (
         <TouchableOpacity
             onPress={clickHandler}
-            className={`bg-secondary px-3 py-4 rounded-md w-full   ${containerStyles}`}
+            disabled={disabled}
+            className={`px-3 rounded-sm py-1 bg-secondary ${containerStyles} ${disabled ? "bg-gray-500/40" : ""}`}
         >
-            <Text className={`text-primary ${textStyle}`}>{title}</Text>
+            {isLoading ? (
+                <Animated.View style={{ transform: [{ rotate }] }}>
+                    <FontAwesome
+                        name="hourglass-1"
+                        size={20}
+                        color="secondary"
+                        className="text-secondary"
+                    />
+                </Animated.View>
+            ) : (
+                <Text className={`text-primary ${textStyle}`}>{title}</Text>
+            )}
         </TouchableOpacity>
     );
 };
