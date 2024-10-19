@@ -125,7 +125,7 @@ export default function SignUp() {
 
                         <View className="mt-2">
                             <AutocompleteInput
-                                className="bg-primary text-secondary border border-border text-sm font-bold px-2 py-1"
+                                className="bg-primary border border-border px-3 py-1 rounded-sm mt-2 text-secondary font-bold text-sm"
                                 data={data}
                                 onChangeText={(text) => setText(text)}
                                 value={text}
