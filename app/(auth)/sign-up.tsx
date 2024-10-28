@@ -11,7 +11,7 @@ import AutocompleteInput from "react-native-autocomplete-input";
 export default function SignUp() {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setdata] = useState<ICollege>([]);
-    const [text, setText] = useState("indian");
+    const [text, setText] = useState("");
 
     const [isDisabled, setIsDisabled] = useState(false);
     const [userInfo, setuserInfo] = useState<ISignUp>({
@@ -125,14 +125,16 @@ export default function SignUp() {
 
                         <View className="mt-2">
                             <AutocompleteInput
-                                className="bg-primary border border-border px-3 py-1 rounded-sm mt-2 text-secondary font-bold text-sm"
+                                className="bg-primary px-3 font-bold text-sm  rounded-sm mt-2 text-secondary font-bold text-sm"
                                 data={data}
                                 onChangeText={(text) => setText(text)}
                                 value={text}
                                 scrollEnabled
                                 flatListProps={{
                                     keyExtractor: (_, idx) => idx.toString(),
-                                    renderItem: ({ item }: ICollege) => (
+                                    scrollEnabled: true,
+                                    className: "h-10",
+                                    renderItem: ({ item }) => (
                                         <TouchableOpacity
                                             onPress={() => {
                                                 setText(item.name);
@@ -144,7 +146,7 @@ export default function SignUp() {
                                             }}
                                             className="px-2 py-1 bg-primary "
                                         >
-                                            <Text className="text-secondary font-thin  text-sm">
+                                            <Text className="text-secondary font-thin  text-xs">
                                                 {item.name}
                                             </Text>
                                         </TouchableOpacity>
